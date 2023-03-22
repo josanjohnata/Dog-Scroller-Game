@@ -155,6 +155,7 @@ window.addEventListener('load', function() {
       this.frameTimer = 0;
       this.frameInterval = 1000/this.fps;
       this.speed = 8;
+      this.markedForDeletion = false;
     }
     draw(context) {
       context.drawImage(
@@ -178,6 +179,7 @@ window.addEventListener('load', function() {
         this.frameTimer += deltaTime;
       }
       this.x -= this.speed;
+      if (this.x < 0 - this.width) this.markedForDeletion = true;
     }
   };
 
@@ -192,6 +194,7 @@ window.addEventListener('load', function() {
       enemy.draw(ctx);
       enemy.update(deltaTime);
     })
+    enemies = enemies.filter(enemy => !enemy.markedForDeletion);
   };
 
   function displayStatusText() {};
