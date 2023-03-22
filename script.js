@@ -49,8 +49,11 @@ window.addEventListener('load', function() {
       this.weight = 1;
     }
     draw(context) {
-      // context.fillStyle = 'white';
-      // context.fillRect(this.x, this.y, this.width, this.height);
+      context.strokeStyle = 'white';
+      context.strokeRect(this.x, this.y, this.width, this.height);
+      context.beginPath();
+      context.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, Math.PI + 2);
+      context.stroke();
       context.drawImage(
         this.image,
         this.frameX * this.width,
@@ -63,7 +66,14 @@ window.addEventListener('load', function() {
         this.height
       );
     }
-    update(input, deltaTime) {
+    update(input, deltaTime, enemies) {
+      // collision detection
+      enemies.forEach(enemy => {
+        const dx = enemy.x - this.x;
+        const dy = enemy.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+      })
       // sprite animation
       if (this.frameTimer > this.frameInterval) {
         if (this.frameX >= this.maxFrame) this.frameX = 0;
@@ -159,6 +169,11 @@ window.addEventListener('load', function() {
       this.markedForDeletion = false;
     }
     draw(context) {
+      context.strokeStyle = 'white';
+      context.strokeRect(this.x, this.y, this.width, this.height);
+      context.beginPath();
+      context.arc(this.x + this.width/2, this.y + this.height/2, this.width/2, 0, Math.PI + 2);
+      context.stroke();
       context.drawImage(
         this.image,
         this.frameX * this.width,
@@ -225,7 +240,7 @@ window.addEventListener('load', function() {
     background.draw(ctx);
     // background.update();
     player.draw(ctx);
-    player.update(input, deltaTime);
+    player.update(input, deltaTime, enemies);
     handleEnemies(deltaTime);
     displayStatusText(ctx);
     requestAnimationFrame(animate);
