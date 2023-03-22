@@ -5,6 +5,7 @@ window.addEventListener('load', function() {
   canvas.height = 720;
   let enemies = [];
   let score = 0;
+  let gameOver = false;
 
   class InputHandler {
     constructor() {
@@ -72,7 +73,9 @@ window.addEventListener('load', function() {
         const dx = enemy.x - this.x;
         const dy = enemy.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        
+        if (distance < enemy.width/2 + this.width/2) {
+          gameOver = true;
+        }
       })
       // sprite animation
       if (this.frameTimer > this.frameInterval) {
@@ -222,6 +225,13 @@ window.addEventListener('load', function() {
     context.fillText('Score: ' + score, 20, 50);
     context.fillStyle = 'white';
     context.fillText('Score: ' + score, 22, 52);
+    if (gameOver) {
+      context.textAlign = 'center';
+      context.fillStyle = 'black';
+      context.fillText('GAME OVER, try again!', canvas.width/2, 200);
+      context.fillStyle = 'white';
+      context.fillText('GAME OVER, try again!', canvas.width/2 + 2, 202);
+    }
   };
 
   const input = new InputHandler();
@@ -243,7 +253,7 @@ window.addEventListener('load', function() {
     player.update(input, deltaTime, enemies);
     handleEnemies(deltaTime);
     displayStatusText(ctx);
-    requestAnimationFrame(animate);
+    if (!gameOver) requestAnimationFrame(animate);
   };
   animate(0);
 });
