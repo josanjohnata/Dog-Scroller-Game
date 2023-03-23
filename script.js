@@ -17,7 +17,7 @@ window.addEventListener('load', function() {
             e.key === 'ArrowRight')
             && this.keys.indexOf(e.key) === -1) {
           this.keys.push(e.key);
-        }
+        } else if (e.key === 'Enter' && gameOver) restartGame();
       });
       window.addEventListener('keyup', e => {
         if (e.key === 'ArrowDown' ||
@@ -36,7 +36,7 @@ window.addEventListener('load', function() {
       this.gameHeight = gameHeight;
       this.width = 200;
       this.height = 200;
-      this.x = 0;
+      this.x = 100;
       this.y = this.gameHeight - this.height;
       this.image = document.getElementById('playerImage');
       this.frameX = 0;
@@ -48,6 +48,12 @@ window.addEventListener('load', function() {
       this.speed = 0;
       this.vy = 0;
       this.weight = 1;
+    }
+    restart() {
+      this.x = 100;
+      this.y = this.gameHeight - this.height;
+      this.maxFrame = 8;
+      this.frameY = 0;
     }
     draw(context) {
       context.drawImage(
@@ -147,6 +153,9 @@ window.addEventListener('load', function() {
       this.x -= this.speed
       if (this.x < 0 - this.width) this.x = 0;
     }
+    restart() {
+      this.x = 0;
+    }
   };
 
   class Enemy {
@@ -210,6 +219,7 @@ window.addEventListener('load', function() {
   };
 
   function displayStatusText(context) {
+    context.textAlign = 'left';
     context.font = '40px Helvetica';
     context.fillStyle = 'black';
     context.fillText('Score: ' + score, 20, 50);
@@ -218,10 +228,19 @@ window.addEventListener('load', function() {
     if (gameOver) {
       context.textAlign = 'center';
       context.fillStyle = 'black';
-      context.fillText('GAME OVER, try again!', canvas.width/2, 200);
+      context.fillText('GAME OVER, press Enter to restart!', canvas.width/2, 200);
       context.fillStyle = 'white';
-      context.fillText('GAME OVER, try again!', canvas.width/2 + 2, 202);
+      context.fillText('GAME OVER, press Enter to restart!', canvas.width/2 + 2, 202);
     }
+  };
+
+  function restartGame() {
+    player.restart();
+    background.restart();
+    enemies = [];
+    score = 0;
+    gameOver = false;
+    animate(0);
   };
 
   const input = new InputHandler();
